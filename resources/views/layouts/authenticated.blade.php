@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('header')</title>
+    <title>POS - @yield('header')</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -248,7 +248,9 @@
 
             <!-- Main content -->
             <section class="content">
-                @yield('content')
+                <div class="container-fluid">
+                    @yield('content')
+                </div>
             </section>
             <!-- /.content -->
         </div>

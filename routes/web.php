@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -30,6 +31,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('api/categories', [CategoryController::class, 'api'])->name('categories.api');
     Route::resource('categories', CategoryController::class);
+
+    Route::get('api/products', [ProductController::class, 'api'])->name('products.api');
+    Route::resource('products', ProductController::class);
 });
 
 

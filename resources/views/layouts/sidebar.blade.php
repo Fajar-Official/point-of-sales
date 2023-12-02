@@ -1,10 +1,9 @@
 <nav class="mt-2">
     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-        <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
+        <!-- Add icons to the links using the Font Awesome class names -->
         <li class="nav-header nav-item">
             <a href="pages/widgets.html" class="nav-link">
-                <i class="nav-icon fas fa-th"></i>
+                <i class="nav-icon fas fa-tachometer-alt"></i>
                 <p>
                     Dashboard
                 </p>
@@ -14,15 +13,15 @@
         <li class="nav-header">Master</li>
         <li class="nav-item">
             <a href="{{ route('categories.index') }}" class="nav-link">
-                <i class="nav-icon far fa-calendar-alt"></i>
+                <i class="nav-icon fas fa-calendar-alt"></i>
                 <p>
                     Kategori
                 </p>
             </a>
         </li>
         <li class="nav-item">
-            <a href="pages/gallery.html" class="nav-link">
-                <i class="nav-icon far fa-image"></i>
+            <a href="{{ route('products.index') }}" class="nav-link">
+                <i class="nav-icon fas fa-image"></i>
                 <p>
                     Product
                 </p>
@@ -30,7 +29,7 @@
         </li>
         <li class="nav-item">
             <a href="pages/kanban.html" class="nav-link">
-                <i class="nav-icon fas fa-columns"></i>
+                <i class="nav-icon fas fa-users"></i>
                 <p>
                     Member
                 </p>
@@ -38,7 +37,7 @@
         </li>
         <li class="nav-item">
             <a href="pages/kanban.html" class="nav-link">
-                <i class="nav-icon fas fa-columns"></i>
+                <i class="nav-icon fas fa-truck"></i>
                 <p>
                     Supplier
                 </p>
@@ -48,7 +47,7 @@
         <li class="nav-header">Transaksi</li>
         <li class="nav-item">
             <a href="pages/calendar.html" class="nav-link">
-                <i class="nav-icon far fa-calendar-alt"></i>
+                <i class="nav-icon fas fa-money-bill-alt"></i>
                 <p>
                     Pengeluaran
                 </p>
@@ -56,7 +55,7 @@
         </li>
         <li class="nav-item">
             <a href="pages/gallery.html" class="nav-link">
-                <i class="nav-icon far fa-image"></i>
+                <i class="nav-icon fas fa-shopping-cart"></i>
                 <p>
                     Pembelian
                 </p>
@@ -64,7 +63,7 @@
         </li>
         <li class="nav-item">
             <a href="pages/kanban.html" class="nav-link">
-                <i class="nav-icon fas fa-columns"></i>
+                <i class="nav-icon fas fa-chart-line"></i>
                 <p>
                     Penjualan
                 </p>
@@ -72,7 +71,7 @@
         </li>
         <li class="nav-item">
             <a href="pages/kanban.html" class="nav-link">
-                <i class="nav-icon fas fa-columns"></i>
+                <i class="nav-icon fas fa-clock"></i>
                 <p>
                     Transaksi Lama
                 </p>
@@ -80,7 +79,7 @@
         </li>
         <li class="nav-item">
             <a href="pages/kanban.html" class="nav-link">
-                <i class="nav-icon fas fa-columns"></i>
+                <i class="nav-icon fas fa-plus"></i>
                 <p>
                     Transaksi Baru
                 </p>
@@ -90,7 +89,7 @@
         <li class="nav-header">Report</li>
         <li class="nav-item">
             <a href="pages/calendar.html" class="nav-link">
-                <i class="nav-icon far fa-calendar-alt"></i>
+                <i class="nav-icon far fa-file-alt"></i>
                 <p>
                     Laporan
                 </p>
@@ -100,7 +99,7 @@
         <li class="nav-header">Sistem</li>
         <li class="nav-item">
             <a href="pages/calendar.html" class="nav-link">
-                <i class="nav-icon far fa-calendar-alt"></i>
+                <i class="nav-icon fas fa-user"></i>
                 <p>
                     User
                 </p>
@@ -108,13 +107,12 @@
         </li>
         <li class="nav-item">
             <a href="pages/gallery.html" class="nav-link">
-                <i class="nav-icon far fa-image"></i>
+                <i class="nav-icon fas fa-cogs"></i>
                 <p>
                     Pengaturan
                 </p>
             </a>
         </li>
-
     </ul>
 </nav>
 <!-- /.sidebar-menu -->
