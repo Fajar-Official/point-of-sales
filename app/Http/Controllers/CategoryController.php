@@ -4,15 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CategoryController extends Controller
 {
+    /**
+     * API
+     */
+    public function api()
+    {
+        $categories = Category::all();
+        return datatables()->of($categories)->addIndexColumn()->make(true);
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        return view('pages.category.index');
     }
 
     /**
@@ -28,7 +38,16 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            Category::create([
+                'name' => $request->input('name')
+            ]);
+
+            return response()->json('Category created successfully', 201);
+        } catch (\Exception $e) {
+            Log::error('Error creating category: ' . $e->getMessage());
+            return response()->json('Internal Server Error = ' . $e->getMessage(), 500);
+        }
     }
 
     /**
@@ -36,7 +55,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        //
+        return response()->json($category);
     }
 
     /**
@@ -52,7 +71,16 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        try {
+            $category->update([
+                'name' => $request->input('name')
+            ]);
+
+            return response()->json('Category updated successfully', 200);
+        } catch (\Exception $e) {
+            Log::error('Error updating category: ' . $e->getMessage());
+            return response()->json('Internal Server Error = ' . $e->getMessage(), 500);
+        }
     }
 
     /**
@@ -60,6 +88,13 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        try {
+            $category->delete();
+
+            return response()->json('Category deleted successfully', 204);
+        } catch (\Exception $e) {
+            Log::error('Error deleting category: ' . $e->getMessage());
+            return response()->json('Internal Server Error = ' . $e->getMessage(), 500);
+        }
     }
 }

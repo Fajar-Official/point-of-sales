@@ -10,7 +10,7 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/fontawesome-free/css/all.min.css') }}">
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- Tempusdominus Bootstrap 4 -->
@@ -233,12 +233,12 @@
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1 class="m-0">Dashboard</h1>
+                            <h1 class="m-0">@yield('header')</h1>
                         </div><!-- /.col -->
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active">Dashboard v1</li>
+                                <li class="breadcrumb-item active">@yield('header')</li>
                             </ol>
                         </div><!-- /.col -->
                     </div><!-- /.row -->
@@ -299,6 +299,15 @@
     <script src="{{ asset('assets/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
     <!-- AdminLTE App -->
     <script src="{{ asset('assets/dist/js/adminlte.js') }}"></script>
+    <!-- CDN Vue 2 -->
+    {{-- <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14"></script> --}}
+    <script src="{{ asset('assets/js/vue@2.7.14') }}"></script>
+    <!-- Validator Bootstrap 3 -->
+    <script src="{{ asset('assets/js/validator.min.js') }}"></script>
+    <!-- Validator Bootstrap 3 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.2/axios.js"></script>
+
+
     $@yield('js')
 </body>
 
