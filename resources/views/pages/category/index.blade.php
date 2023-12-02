@@ -2,37 +2,40 @@
 @section('header', 'Category')
 
 @section('css')
+    <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
 @endsection
 
 @section('content')
-    <div class="container-fluid">
-        <div id="controller" class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <div>
-                            <button @click="addForm('{{ route('categories.store') }}')" class="btn btn-primary">
-                                Tambah Kategori
-                            </button>
-                        </div>
 
+    <div id="controller" class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <button @click="addForm('{{ route('categories.store') }}')" class="btn btn-primary">
+                            Tambah Kategori
+                        </button>
                     </div>
 
-                    <div class="card-body table-striped table-bordered">
-                        <table id="datatable" class="table table-head-fixed text-nowrap">
-                            <thead>
-                                <tr>
-                                    <th>No.</th>
-                                    <th>Nama</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
+                </div>
+
+                <div class="card-body table-striped table-bordered">
+                    <table id="datatable" class="table table-head-fixed text-nowrap">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Nama</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
+
 
     @includeIf('pages.category.form')
 @endsection
