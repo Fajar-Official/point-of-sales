@@ -30,7 +30,7 @@
                                 <th>No.</th>
                                 <th>Kode</th>
                                 <th>Nama</th>
-                                {{-- <th>Kategori</th> --}}
+                                <th>Kategori</th>
                                 <th>Merk</th>
                                 <th>Harga Beli</th>
                                 <th>Harga Jual</th>
@@ -81,6 +81,11 @@
             },
             {
                 data: 'name',
+                class: 'text-center',
+                orderable: true
+            },
+            {
+                data: 'category.name',
                 class: 'text-center',
                 orderable: true
             },

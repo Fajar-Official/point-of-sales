@@ -4,15 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Models\Member;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class MemberController extends Controller
 {
+    /**
+     * API
+     */
+    public function api()
+    {
+        $members = Member::all();
+        return datatables()->of($members)->addIndexColumn()->make(true);
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        return view('pages.member.index');
     }
 
     /**
@@ -28,7 +38,23 @@ class MemberController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $latestMember = Member::latest()->first();
+            $code = (int)$latestMember->code + 1 ?? 1;
+
+            $member = new Member();
+            $member->code = add_zeros_at_front($code, 5);
+            $member->name = $request->name;
+            $member->phone = $request->phone;
+            $member->address = $request->address;
+
+            $member->save();
+
+            return response()->json('Member created successfully', 201);
+        } catch (\Exception $e) {
+            Log::error('Error creating member: ' . $e->getMessage());
+            return response()->json('Internal Server Error = ' . $e->getMessage(), 500);
+        }
     }
 
     /**
@@ -36,7 +62,7 @@ class MemberController extends Controller
      */
     public function show(Member $member)
     {
-        //
+        return response()->json($member);
     }
 
     /**
@@ -52,7 +78,16 @@ class MemberController extends Controller
      */
     public function update(Request $request, Member $member)
     {
-        //
+        try {
+            $member->update([
+                'name' => $request->input('name')
+            ]);
+
+            return response()->json('Category updated successfully', 200);
+        } catch (\Exception $e) {
+            Log::error('Error updating category: ' . $e->getMessage());
+            return response()->json('Internal Server Error = ' . $e->getMessage(), 500);
+        }
     }
 
     /**
@@ -60,6 +95,13 @@ class MemberController extends Controller
      */
     public function destroy(Member $member)
     {
-        //
+        try {
+            $member->delete();
+
+            return response()->json('Category deleted successfully', 204);
+        } catch (\Exception $e) {
+            Log::error('Error deleting category: ' . $e->getMessage());
+            return response()->json('Internal Server Error = ' . $e->getMessage(), 500);
+        }
     }
 }

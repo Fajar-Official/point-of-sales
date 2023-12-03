@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\MemberController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -34,6 +35,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('api/products', [ProductController::class, 'api'])->name('products.api');
     Route::resource('products', ProductController::class);
+
+    Route::get('api/members', [MemberController::class, 'api'])->name('members.api');
+    Route::resource('members', MemberController::class);
 });
 
 
