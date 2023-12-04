@@ -2,7 +2,7 @@
     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
         <!-- Add icons to the links using the Font Awesome class names -->
         <li class="nav-header nav-item">
-            <a href="pages/widgets.html" class="nav-link">
+            <a href="{{ route('dashboard') }}" class="nav-link">
                 <i class="nav-icon fas fa-tachometer-alt"></i>
                 <p>
                     Dashboard
@@ -36,7 +36,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a href="pages/kanban.html" class="nav-link">
+            <a href="{{ route('suppliers.index') }}" class="nav-link">
                 <i class="nav-icon fas fa-truck"></i>
                 <p>
                     Supplier
