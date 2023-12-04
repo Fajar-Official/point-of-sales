@@ -46,7 +46,7 @@
 
         <li class="nav-header">Transaksi</li>
         <li class="nav-item">
-            <a href="pages/calendar.html" class="nav-link">
+            <a href="{{ route('expenses.index') }}" class="nav-link">
                 <i class="nav-icon fas fa-money-bill-alt"></i>
                 <p>
                     Pengeluaran

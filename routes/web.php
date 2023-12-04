@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -44,6 +45,9 @@ Route::middleware('auth', 'verified')->group(function () {
 
     Route::get('/api/suppliers', [SupplierController::class, 'api'])->name('suppliers.api');
     Route::resource('/suppliers', SupplierController::class);
+
+    Route::get('/api/expenses', [ExpenseController::class, 'api'])->name('expenses.api');
+    Route::resource('/expenses', ExpenseController::class);
 });
 
 
