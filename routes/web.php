@@ -5,6 +5,8 @@ use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\PurchaseDetailController;
 use App\Http\Controllers\SupplierController;
 use Illuminate\Support\Facades\Route;
 
@@ -48,6 +50,13 @@ Route::middleware('auth', 'verified')->group(function () {
 
     Route::get('/api/expenses', [ExpenseController::class, 'api'])->name('expenses.api');
     Route::resource('/expenses', ExpenseController::class);
+
+    Route::get('/api/purchases', [PurchaseController::class, 'api'])->name('purchases.api');
+    Route::get('/purchases/{id}/create', [PurchaseController::class, 'create'])->name('purchases.create');
+    Route::resource('/purchases', PurchaseController::class)->except('create');
+
+    Route::get('/api/purchase_details/{id}', [PurchaseDetailController::class, 'api'])->name('purchase_details.api');
+    Route::resource('/purchase_details', PurchaseDetailController::class);
 });
 
 
