@@ -115,7 +115,11 @@ class PurchaseDetailController extends Controller
         $purchaseDetail->subtotal = $purchaseDetail->product->purchase_price * $request->quantity;
         $purchaseDetail->save();
 
-        return response()->json('Purchase detail updated successfully', 200);
+        // Kirim kembali respons berupa objek JSON yang berisi informasi detail pembelian yang diperbarui
+        return response()->json([
+            'message' => 'Purchase detail updated successfully',
+            'subtotal' => $purchaseDetail->subtotal
+        ], 200);
     }
     /**
      * Remove the specified resource from storage.

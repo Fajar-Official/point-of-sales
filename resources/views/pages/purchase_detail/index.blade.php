@@ -78,9 +78,9 @@
                             <form action="" class="form-purchase" method="POST">
                                 @csrf
                                 <input type="hidden" name="id" value="{{ $purchase_id }}">
-                                <input type="hidden" name="total" value="total">
-                                <input type="hidden" name="total_item" value="total_item">
-                                <input type="hidden" name="purchase" value="purchase">
+                                <input type="hidden" name="total" id="total" value="total">
+                                <input type="hidden" name="total_item" id="total_item" value="total_item">
+                                <input type="hidden" name="payment" id="payment" value="payment">
 
                                 <div class="form-group flex">
                                     <label for="totalrp" class="font-bold text-gray-700 flex-shrink-0 w-1/3">Total</label>
@@ -90,14 +90,15 @@
                                 <div class="form-group flex">
                                     <label for="discount"
                                         class="font-bold text-gray-700 flex-shrink-0 w-1/3">Diskon(%)</label>
-                                    <input type="number" name="discount" id="discount"
+                                    <input type="number" name="discount" id="discount" value="0"
                                         class="w-full py-2 px-4 mb-4 border rounded border-gray-300">
                                 </div>
                                 <div class="form-group flex">
-                                    <label for="payment" class="font-bold text-gray-700 flex-shrink-0 w-1/3">Bayar</label>
-                                    <input type="number" name="payment" id="payment"
+                                    <label for="paymentrp" class="font-bold text-gray-700 flex-shrink-0 w-1/3">Bayar</label>
+                                    <input type="text" name="paymentrp" id="paymentrp"
                                         class="w-full py-2 px-4 mb-4 border rounded border-gray-300">
                                 </div>
+
                                 <div class="box-footer btn btn-primary btn-sm  pull-right text-center">
                                     <button type="submit" class="btn-simpan">
                                         <i class="fa fa-floppy-o"></i> Simpan Transaksi
@@ -137,36 +138,43 @@
         $(document).on('input', '.updatequantity', function() {
             let id = $(this).data('id');
             let quantity = $(this).val();
+
+            // Validasi kuantitas
             if (quantity < 1) {
-                alert('Item tidak boleh kurang dari 1')
+                alert('Item tidak boleh kurang dari 1');
                 $(this).val(1);
                 return;
             }
             if (quantity > 10000) {
-                alert('Item tidak boleh melewati 10.000')
+                alert('Item tidak boleh melewati 10.000');
                 $(this).val(10000);
                 return;
             }
 
-            $.post(`{{ url('/purchase_details') }}/${id}`, {
+            // Simpan referensi this
+            let $this = $(this);
+
+            $.ajax({
+                url: `/purchase_details/${id}`,
+                type: 'PUT',
+                data: {
                     '_token': '{{ csrf_token() }}',
-                    '_method': 'PUT',
                     'quantity': quantity
-                })
-                .done(response => {
-                    controller.calculateTotal();
-                    controller.logUpdate();
-                    // Memperbarui total tanpa refresh halaman
-                    $.get(apiUrl, function(data) {
-                        controller.datas = data.data;
-                        controller.calculateTotal();
-                    });
-                })
-                .fail(error => {
+                },
+                success: function(response) {
+                    console.log(response.subtotal);
+                    // Perbarui subtotal di tabel
+                    $this.closest('tr').find('.subtotal').text('Rp. ' + parseFloat(response.subtotal)
+                        .toFixed(0));
+
+                    // Perbarui total dan pembayaran
+                    controller.loadForm($('#discount').val());
+                },
+                error: function(error) {
                     alert('Tidak dapat Update Quantity Product');
                     controller.handleAjaxError(error);
-                    return
-                })
+                }
+            });
         });
 
         var columns = [{
@@ -203,10 +211,10 @@
             },
             {
                 data: 'subtotal',
-                class: 'text-center',
+                class: 'text-center subtotal',
                 orderable: true,
                 render: function(data, type, row, meta) {
-                    return 'Rp. ' + data;
+                    return 'Rp. ' + parseFloat(data).toFixed(0);
                 }
             },
             {
@@ -231,97 +239,13 @@
             },
             mounted: function() {
                 this.datatable();
+                $('#discount').on('input', () => {
+                    this.loadForm($('#discount').val());
+                });
             },
             methods: {
-                datatable() {
-                    const _this = this;
-                    if (_this.data) {
-                        _this.data.destroy();
-                    }
-                    _this.data = $('#datatable').DataTable({
-                        ajax: {
-                            url: _this.apiUrl,
-                            type: 'GET'
-                        },
-                        columns: columns,
-                        dom: 'brt',
-                        bSort: false,
-                    }).on('xhr', function() {
-                        _this.datas = _this.data.ajax.json().data;
-                        _this.calculateTotal();
-                        console.log('Received data:', _this.datas);
-                    });
-                },
-                handleAjaxError(error) {
-                    if (error.response) {
-                        console.error('Error creating purchase. Server responded with:', error.response
-                            .status,
-                            error.response.data);
-                    } else if (error.request) {
-                        console.error('Error creating purchase. No response received from server.');
-                    } else {
-                        console.error('Error creating purchase:', error.message);
-                    }
-
-                    alert("Tidak dapat menyimpan data");
-                },
-                showProduct() {
-                    const _this = this;
-                    $('#modal-product').modal('show');
-                },
-                hideProduct() {
-                    const _this = this;
-                    $('#modal-product').modal('hide');
-                },
-                selectProduct(id, code) {
-                    console.log('select product klik');
-                    const _this = this;
-                    $('#product_id').val(id);
-                    $('#product_code').val(code);
-                    this.hideProduct();
-                    this.addProduct();
-                },
-                addProduct() {
-                    const _this = this;
-                    axios.post("{{ route('purchase_details.store') }}", $('.form-product').serialize())
-                        .then(response => {
-                            _this.datatable();
-                            $('#product_code').val('');
-                            $('.form-product')[0].reset();
-                            $('#product_code').focus();
-                            alert('Data Product berhasil disimpan.');
-                        })
-                        .catch(error => {
-                            _this.handleAjaxError(error);
-                            alert('Tidak dapat Menyimpan Data Product. Silakan coba lagi.');
-                        });
-                },
-                calculateTotal() {
-                    const _this = this;
-                    let total = 0;
-                    this.datas.forEach(item => {
-                        total += item.quantity * item.product.purchase_price;
-                    });
-                    document.querySelector('.total-num').innerText = 'Rp. ' + total;
-
-                    console.log('total-num now: ' + total);
-                    terbilang = this.terbilang(total) + ' RUPIAH';
-                    document.querySelector('.total-text').innerText = terbilang.toUpperCase();
-
-                    // Menampilkan total di elemen dengan id 'totalrp'
-                    document.getElementById('totalrp').value = total;
-                },
-                deleteData(id) {
-                    const index = this.datas.findIndex(item => item.id === id);
-                    this.datas.splice(index, 1);
-                    this.calculateTotal();
-                    console.log('Data dengan ID', id, 'telah dihapus');
-                },
-                logUpdate() {
-                    return console.log('Update Log');
-                },
-
                 terbilang(total) {
+                    const _this = this;
                     const bilangan = [
                         '', 'satu', 'dua', 'tiga', 'empat', 'lima', 'enam', 'tujuh', 'delapan', 'sembilan',
                         'sepuluh',
@@ -357,26 +281,136 @@
                     } else {
                         return 'Data terlalu besar';
                     }
-                }
-            }
-        });
-        $(document).on('input', '#discount', function() {
-            // Panggil metode calculatePayment saat nilai diskon berubah
-            calculatePayment();
-        });
+                },
+                loadForm(discount = 0) {
+                    const _this = this;
+                    if (discount < 0) {
+                        discount = 0;
+                    } else if (discount > 100) {
+                        discount = 100;
+                    }
+                    const totalPrice = _this.calculateTotalPrice();
+                    const totalItem = _this.calculateTotalItem();
+                    const payment = totalPrice - (totalPrice * discount / 100);
+                    const totalFormatted = 'Rp. ' + totalPrice.toFixed(0);
+                    const paymentFormatted = 'Rp. ' + payment.toFixed(0);
+                    const terbilangPayment = _this.terbilang(payment);
+                    $('#total').val(totalPrice);
+                    $('#total_item').val(totalItem);
+                    $('#discount').val(discount);
+                    $('#payment').val(payment);
+                    $('#totalrp').val(totalFormatted);
+                    $('#paymentrp').val(paymentFormatted);
 
-        // Metode untuk menghitung pembayaran berdasarkan total belanja dan diskon
-        function calculatePayment() {
-            // Mengambil nilai total belanja dari input totalrp
-            let total = parseFloat($('#totalrp').val());
-            // Mengambil nilai diskon dari input diskon
-            let discountPercentage = parseFloat($('#discount').val());
-            // Menghitung nilai diskon berdasarkan persentase
-            let discount = (discountPercentage / 100) * total;
-            // Menghitung pembayaran setelah diskon
-            let payment = total - discount;
-            // Menampilkan nilai pembayaran pada input payment
-            $('#payment').val(payment);
-        }
+                    $('.total-num').text(paymentFormatted);
+                    $('.total-text').text(terbilangPayment);
+                },
+                // Fungsi untuk menghitung total harga belanja
+                calculateTotalPrice() {
+                    let totalPrice = 0;
+                    $('.subtotal').each(function() {
+                        let subtotalText = $(this).text().replace('Rp. ', '').replace(',', '');
+                        if (!isNaN(subtotalText)) {
+                            totalPrice += parseFloat(subtotalText);
+                        }
+                    });
+                    return totalPrice;
+                },
+                // Fungsi untuk menghitung total item yang dibeli
+                calculateTotalItem() {
+                    const _this = this;
+                    let totalItem = 0;
+                    $('.quantity-input').each(function() {
+                        totalItem += parseInt($(this).val());
+                    });
+                    return totalItem;
+                },
+                calculateTotalPrice() {
+                    let totalPrice = 0;
+                    $('.subtotal').each(function() {
+                        let subtotalText = $(this).text().replace('Rp. ', '').replace(',', '');
+                        if (!isNaN(subtotalText)) {
+                            totalPrice += parseFloat(subtotalText);
+                        }
+                    });
+                    console.log('Total Price:', totalPrice);
+                    return totalPrice;
+                },
+
+                calculateTotalItem() {
+                    const _this = this;
+                    let totalItem = 0;
+                    $('.quantity-input').each(function() {
+                        totalItem += parseInt($(this).val());
+                    });
+                    return totalItem;
+                },
+                datatable() {
+                    const _this = this;
+                    if (_this.data) {
+                        _this.data.destroy();
+                    }
+                    _this.data = $('#datatable').DataTable({
+                        ajax: {
+                            url: _this.apiUrl,
+                            type: 'GET'
+                        },
+                        columns: columns,
+                        dom: 'brt',
+                        bSort: false,
+                    }).on('xhr', function() {
+                        _this.datas = _this.data.ajax.json().data;
+                        console.log('Received data:', _this.datas);
+                    }).on('draw.dt', function() {
+                        _this.loadForm($('#discount').val());
+                    });
+                },
+            },
+            handleAjaxError(error) {
+                if (error.response) {
+                    console.error('Error creating purchase. Server responded with:', error.response
+                        .status,
+                        error.response.data);
+                } else if (error.request) {
+                    console.error('Error creating purchase. No response received from server.');
+                } else {
+                    console.error('Error creating purchase:', error.message);
+                }
+
+                alert("Tidak dapat menyimpan data");
+            },
+            showProduct() {
+                const _this = this;
+                $('#modal-product').modal('show');
+            },
+            hideProduct() {
+                const _this = this;
+                $('#modal-product').modal('hide');
+            },
+            selectProduct(id, code) {
+                console.log('select product klik');
+                const _this = this;
+                $('#product_id').val(id);
+                $('#product_code').val(code);
+                this.hideProduct();
+                this.addProduct();
+            },
+            addProduct() {
+                const _this = this;
+                axios.post("{{ route('purchase_details.store') }}", $('.form-product').serialize())
+                    .then(response => {
+                        _this.datatable();
+                        $('#product_code').val('');
+                        $('.form-product')[0].reset();
+                        $('#product_code').focus();
+                        alert('Data Product berhasil disimpan.');
+                    })
+                    .catch(error => {
+                        _this.handleAjaxError(error);
+                        alert('Tidak dapat Menyimpan Data Product. Silakan coba lagi.');
+                    });
+            },
+
+        });
     </script>
 @endsection
