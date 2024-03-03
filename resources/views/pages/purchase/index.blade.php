@@ -13,9 +13,10 @@
             <div class="card">
                 <div class="card-header">
                     <div>
-                        <button @click="addForm()" class="btn btn-primary">
-                            Transaksi baru
-                        </button>
+                        <button @click="addForm()" class="btn btn-primary">Transaksi baru </button>
+                        @empty(!session('id'))
+                            <a href="{{ route('purchase_details.index') }}" class="btn btn-info">Transaksi Aktif </a>
+                        @endempty
                     </div>
 
                 </div>
@@ -67,25 +68,38 @@
                 orderable: true
             },
             {
-                data: 'name',
+                data: 'created_at',
                 class: 'text-center',
                 orderable: true
             },
             {
-                data: 'phone',
+                data: 'supplier.name',
                 class: 'text-center',
                 orderable: true
             },
             {
-                data: 'address',
+                data: 'total_item',
+                class: 'text-center',
+                orderable: true
+            },
+            {
+                data: 'total_price',
+                class: 'text-center',
+                orderable: true
+            },
+            {
+                data: 'discount',
+                class: 'text-center',
+                orderable: true
+            },
+            {
+                data: 'payment',
                 class: 'text-center',
                 orderable: true
             },
             {
                 render: function(data, type, row, meta) {
                     return `
-            <a href="#" class="btn btn-info btn-sm">Detail</a>
-            <a href="#" class="btn btn-warning btn-sm" onclick="controller.editForm(${row.id})">Edit</a>
             <a href="#" class="btn btn-danger btn-sm" onclick="controller.deleteData(${row.id})">Delete</a>
         `;
                 },
@@ -114,16 +128,16 @@
                     if (_this.data) {
                         _this.data.destroy();
                     }
-                    // _this.data = $('#datatable').DataTable({
-                    //     ajax: {
-                    //         url: _this.apiUrl,
-                    //         type: 'GET'
-                    //     },
-                    //     columns: columns,
-                    // }).on('xhr', function() {
-                    //     _this.datas = _this.data.ajax.json().data;
-                    //     console.log('Received data:', _this.datas);
-                    // });
+                    _this.data = $('#datatable').DataTable({
+                        ajax: {
+                            url: _this.apiUrl,
+                            type: 'GET'
+                        },
+                        columns: columns,
+                    }).on('xhr', function() {
+                        _this.datas = _this.data.ajax.json().data;
+                        console.log('Received data:', _this.datas);
+                    });
                 },
                 handleAjaxError(error) {
                     if (error.response) {

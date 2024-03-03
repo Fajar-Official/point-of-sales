@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Models\Purchase;
+use App\Models\PurchaseDetail;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 
@@ -10,7 +12,7 @@ class PurchaseController extends Controller
 {
     public function api()
     {
-        $purchase = Purchase::all();
+        $purchase = Purchase::orderBy('id', 'desc');
         return datatables()->of($purchase)->addIndexColumn()->make(true);
     }
     /**
@@ -47,7 +49,20 @@ class PurchaseController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $purchases =  Purchase::find($request->id);
+        $purchases->total_item = $request->total_item;
+        $purchases->total_price = $request->total;
+        $purchases->discount = $request->discount;
+        $purchases->payment = $request->payment;
+        $purchases->update();
+
+        $detail = PurchaseDetail::where('purchase_id', $purchases->id)->get();
+        foreach ($detail as $key => $item) {
+            $product = Product::find($item->product_id);
+            $product->stock += $item->quantity;
+            $product->update();
+        }
+        return redirect()->route('purchases.index');
     }
 
     /**

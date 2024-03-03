@@ -75,7 +75,7 @@
 
                         <!-- Bagian Kanan -->
                         <div class="lg:w-2/6 flex flex-col">
-                            <form action="" class="form-purchase" method="POST">
+                            <form action="{{ route('purchases.store') }}" class="form-purchase" method="POST">
                                 @csrf
                                 <input type="hidden" name="id" value="{{ $purchase_id }}">
                                 <input type="hidden" name="total" id="total" value="total">
@@ -135,6 +135,9 @@
         const purchaseId = document.getElementById('purchase_id').value;
         const apiUrl = "{{ route('purchase_details.api', ['id' => ':id']) }}".replace(':id', purchaseId);
 
+        $('.btn-submit').on('click', function() {
+            $('form-purchase').submit();
+        })
         $(document).on('input', '.updatequantity', function() {
             let id = $(this).data('id');
             let quantity = $(this).val();
