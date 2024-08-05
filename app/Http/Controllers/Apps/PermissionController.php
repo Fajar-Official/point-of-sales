@@ -12,13 +12,13 @@ class PermissionController extends Controller
      * Handle the incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Inertia\Response
+     * @return \Illuminate\Http\Response
      */
     public function __invoke(Request $request)
     {
         //get permissions
-        $permissions = Permission::when($request->q, function ($permissions) use ($request) {
-            $permissions = $permissions->where('name', 'like', '%' . $request->q . '%');
+        $permissions = Permission::when(request()->q, function ($permissions) {
+            $permissions = $permissions->where('name', 'like', '%' . request()->q . '%');
         })->latest()->paginate(5);
 
         //return inertia view
