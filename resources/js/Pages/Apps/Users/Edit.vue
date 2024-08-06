@@ -1,6 +1,6 @@
 <template>
     <Head>
-        <title>Add New User - Aplikasi Kasir</title>
+        <title>Edit User - Aplikasi Kasir</title>
     </Head>
     <main class="c-main">
         <div class="container-fluid">
@@ -9,7 +9,7 @@
                     <div class="col-md-12">
                         <div class="card border-0 rounded-3 shadow border-top-purple">
                             <div class="card-header">
-                                <span class="font-weight-bold"><i class="fa fa-user"></i> ADD NEW USER</span>
+                                <span class="font-weight-bold"><i class="fa fa-user"></i> EDIT USER</span>
                             </div>
                             <div class="card-body">
 
@@ -71,7 +71,7 @@
 
                                     <div class="row">
                                         <div class="col-12">
-                                            <button class="btn btn-primary shadow-sm rounded-sm" type="submit">SAVE</button>
+                                            <button class="btn btn-primary shadow-sm rounded-sm" type="submit">UPDATE</button>
                                             <button class="btn btn-warning shadow-sm rounded-sm ms-3" type="reset">RESET</button>
                                         </div>
                                     </div>
@@ -87,10 +87,10 @@
 </template>
 
 <script>
-    //import layout
+	//import layout
     import LayoutApp from '../../../Layouts/App.vue';
 
-    //import Heade and useForm from Inertia
+    //import Heade and Link from Inertia
     import { Head, Link, router } from '@inertiajs/vue3';
 
     //import reactive from vue
@@ -112,26 +112,27 @@
         //props
         props: {
             errors: Object,
+            user: Object,
             roles: Array,
         },
 
         //composition API
-        setup() {
+        setup(props) {
 
             //define form with reactive
             const form = reactive({
-                name: '',
-                email: '',
+                name: props.user.name,
+                email: props.user.email,
                 password: '',
                 password_confirmation: '',
-                roles: []
+                roles: props.user.roles.map(obj => obj.name),
             });
 
             //method "submit"
             const submit = () => {
 
                 //send data to server
-                router.post('/apps/users', {
+                router.put(`/apps/users/${props.user.id}`, {
                     //data
                     name: form.name,
                     email: form.email,
@@ -143,7 +144,7 @@
                         //show success alert
                         Swal.fire({
                             title: 'Success!',
-                            text: 'User saved successfully.',
+                            text: 'User updated successfully.',
                             icon: 'success',
                             showConfirmButton: false,
                             timer: 2000
