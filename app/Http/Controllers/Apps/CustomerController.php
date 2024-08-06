@@ -50,14 +50,14 @@ class CustomerController extends Controller
          */
         $request->validate([
             'name'      => 'required',
-            'no_telp'   => 'required|unique:customers',
+            'phone'   => 'required|unique:customers',
             'address'   => 'required',
         ]);
 
         //create customer
         Customer::create([
             'name'      => $request->name,
-            'no_telp'   => $request->no_telp,
+            'phone'   => $request->phone,
             'address'   => $request->address,
         ]);
 
@@ -92,14 +92,14 @@ class CustomerController extends Controller
          */
         $request->validate([
             'name'      => 'required',
-            'no_telp'   => 'required|unique:customers,no_telp,' . $customer->id,
+            'phone'   => 'required|unique:customers,phone,' . $customer->id,
             'address'   => 'required',
         ]);
 
         //update customer
         $customer->update([
             'name'      => $request->name,
-            'no_telp'   => $request->no_telp,
+            'phone'   => $request->phone,
             'address'   => $request->address,
         ]);
 

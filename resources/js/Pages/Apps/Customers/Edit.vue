@@ -27,10 +27,10 @@
                                         <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label class="fw-bold">No. Telp</label>
-                                                <input class="form-control" v-model="form.no_telp" :class="{ 'is-invalid': errors.no_telp }" type="number" placeholder="No. Telp">
+                                                <input class="form-control" v-model="form.phone" :class="{ 'is-invalid': errors.phone }" type="number" placeholder="No. Telp">
                                             </div>
-                                            <div v-if="errors.no_telp" class="alert alert-danger">
-                                                {{ errors.no_telp }}
+                                            <div v-if="errors.phone" class="alert alert-danger">
+                                                {{ errors.phone }}
                                             </div>
                                         </div>
                                     </div>
@@ -93,7 +93,7 @@
             //define form with reactive
             const form = reactive({
                 name: props.customer.name,
-                no_telp: props.customer.no_telp,
+                phone: props.customer.phone,
                 address: props.customer.address
             });
 
@@ -104,7 +104,7 @@
                 router.put(`/apps/customers/${props.customer.id}`, {
                     //data
                     name: form.name,
-                    no_telp: form.no_telp,
+                    phone: form.phone,
                     address: form.address
                 }, {
                     onSuccess: () => {
