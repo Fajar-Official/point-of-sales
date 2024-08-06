@@ -66,7 +66,7 @@ class SaleController extends Controller
      * pdf
      *
      * @param  mixed $request
-     * @return void
+     * @return \Illuminate\Http\Response
      */
     public function pdf(Request $request)
     {
